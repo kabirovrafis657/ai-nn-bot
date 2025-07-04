@@ -1,0 +1,13 @@
+{
+  "name": "ai-undress-bot-web",
+  "version": "1.0.0",
+  "description": "Web interface for AI undress bot",
+  "main": "index.html",
+  "scripts": {
+    "build": "echo 'No build step defined for this simple web project.'",
+    "start": "echo 'Open index.html in a web browser to view the application.'"
+  },
+  "keywords": ["ai", "bot", "web"],
+  "author": "",
+  "license": "ISC"
+}
