@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>AI Photo Editor</title>
+    <link rel="stylesheet" href="style.css">
+</head>
+<body>
+    <div class="container">
+        <header>
+            <h1>AI Photo Editor</h1>
+            <div class="language-selector">
+                <select id="languageSelect">
+                    <option value="en">🇺🇸 English</option>
+                    <option value="ru">🇷🇺 Русский</option>
+                    <option value="es">🇪🇸 Español</option>
+                </select>
+            </div>
+        </header>
+
+        <main>
+            <div class="age-verification" id="ageVerification">
+                <h2 data-translate="welcome">Are you 18 years old? 🔞</h2>
+                <div class="buttons">
+                    <button class="btn btn-primary" onclick="confirmAge(true)" data-translate="yes">Yes</button>
+                    <button class="btn btn-secondary" onclick="confirmAge(false)" data-translate="no">No</button>
+                </div>
+            </div>
+
+            <div class="main-content" id="mainContent" style="display: none;">
+                <div class="mode-selection" id="modeSelection">
+                    <h2 data-translate="select_mode">Select mode</h2>
+                    <div class="mode-buttons">
+                        <button class="mode-btn" onclick="selectMode('undress')" data-translate="remove_clothes">Remove clothes</button>
+                        <button class="mode-btn" onclick="selectMode('bikini')" data-translate="add_swimsuit">Add swimsuit</button>
+                        <button class="mode-btn" onclick="selectMode('lingerie')" data-translate="add_bra">Add a bra</button>
+                        <button class="mode-btn" onclick="selectMode('bath_towel')" data-translate="add_towel">Add a towel</button>
+                    </div>
+                </div>
+
+                <div class="upload-section" id="uploadSection" style="display: none;">
+                    <h3 data-translate="send_photo">Send a photo 📷</h3>
+                    <div class="upload-area" id="uploadArea">
+                        <input type="file" id="fileInput" accept="image/*" style="display: none;">
+                        <div class="upload-placeholder">
+                            <i class="upload-icon">📷</i>
+                            <p data-translate="click_to_upload">Click to upload or drag and drop</p>
+                        </div>
+                    </div>
+                    <button class="btn btn-primary" id="processBtn" onclick="processImage()" style="display: none;" data-translate="process_image">Process Image</button>
+                </div>
+
+                <div class="processing" id="processing" style="display: none;">
+                    <div class="spinner"></div>
+                    <p data-translate="processing">Processing... Please wait 40 seconds - 2 minutes 🕐</p>
+                </div>
+
+                <div class="result-section" id="resultSection" style="display: none;">
+                    <h3 data-translate="result">Result</h3>
+                    <div class="result-images">
+                        <div class="image-container">
+                            <h4 data-translate="original">Original</h4>
+                            <img id="originalImage" alt="Original">
+                        </div>
+                        <div class="image-container">
+                            <h4 data-translate="processed">Processed</h4>
+                            <img id="processedImage" alt="Processed">
+                        </div>
+                    </div>
+                    <div class="result-actions">
+                        <button class="btn btn-primary" onclick="downloadResult()" data-translate="download">Download</button>
+                        <button class="btn btn-secondary" onclick="processAnother()" data-translate="process_another">Process Another</button>
+                    </div>
+                </div>
+
+                <div class="payment-section" id="paymentSection" style="display: none;">
+                    <h3 data-translate="payment_required">Payment Required</h3>
+                    <p data-translate="payment_description">To process this image, you need to purchase credits.</p>
+                    <div class="pricing">
+                        <div class="price-card">
+                            <h4 data-translate="single_photo">Single Photo</h4>
+                            <div class="price">19 ⭐</div>
+                            <p data-translate="high_quality">High quality AI processing</p>
+                            <button class="btn btn-primary" onclick="purchaseCredits()" data-translate="buy_now">Buy Now</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+
+    <script src="translations.js"></script>
+    <script src="script.js"></script>
+</body>
+</html>
