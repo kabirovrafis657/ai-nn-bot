@@ -134,49 +134,57 @@ function processImage() {
     reader.onload = function(e) {
         const base64Image = e.target.result;
         
-        // Simulate API call
-        setTimeout(() => {
-            processWithAPI(base64Image);
-        }, 2000);
+        // Call API with a longer timeout for processing
+        processWithAPI(base64Image);
     };
     reader.readAsDataURL(selectedFile);
 }
 
 async function processWithAPI(base64Image) {
     try {
-        // This would be your actual API call
-        const response = await fetch('/api/process', {
-            method: 'POST',
-            headers: {
-                'Content-Type': 'application/json',
-            },
-            body: JSON.stringify({
-                image: base64Image,
-                mode: selectedMode
-            })
-        });
+        // Show processing message
+        const lang = getCurrentLanguage();
+        showNotification(translations[lang].processing, 'info');
         
-        if (response.ok) {
-            const result = await response.json();
-            showResult(base64Image, result.processedImage);
+        // For demo purposes, we'll simulate the processing
+        // In a real implementation, this would call your actual API
+        const response = await simulateAPICall(base64Image);
+        
+        if (response.success) {
+            showResult(base64Image, response.processedImage);
             userCredits--;
             updateCreditsDisplay();
+            
+            const lang = getCurrentLanguage();
+            showNotification('Processing completed successfully!', 'success');
         } else {
             throw new Error('Processing failed');
         }
     } catch (error) {
         console.error('Error:', error);
-        // For demo purposes, show a mock result
-        showMockResult(base64Image);
+        const lang = getCurrentLanguage();
+        showNotification(translations[lang].photo_error, 'error');
+        
+        // Reset to upload section
+        document.getElementById('processing').style.display = 'none';
+        document.getElementById('uploadSection').style.display = 'block';
     }
 }
 
-function showMockResult(originalImage) {
-    // For demo purposes, we'll show the same image as "processed"
-    // In a real implementation, this would be the processed image from the API
-    showResult(originalImage, originalImage);
-    userCredits--;
-    updateCreditsDisplay();
+async function simulateAPICall(base64Image) {
+    // Simulate API processing time (2-5 seconds)
+    const processingTime = Math.random() * 3000 + 2000;
+    
+    return new Promise((resolve) => {
+        setTimeout(() => {
+            // For demo purposes, return the same image as "processed"
+            // In a real implementation, this would be the actual processed image
+            resolve({
+                success: true,
+                processedImage: base64Image
+            });
+        }, processingTime);
+    });
 }
 
 function showResult(originalImage, processedImage) {
@@ -236,32 +244,38 @@ function showPaymentSection() {
 }
 
 function purchaseCredits() {
-    // In a real implementation, this would integrate with Telegram Stars or another payment system
-    // For demo purposes, we'll simulate a successful purchase
+    // Simulate Telegram Stars payment
+    // In a real implementation, this would integrate with Telegram WebApp API
     
     const lang = getCurrentLanguage();
-    showNotification(translations[lang].payment_success, 'success');
     
-    userCredits++;
-    updateCreditsDisplay();
+    // Simulate payment processing
+    showNotification('Processing payment...', 'info');
     
-    // Hide payment section and show upload section
-    document.getElementById('paymentSection').style.display = 'none';
-    document.getElementById('uploadSection').style.display = 'block';
-    document.getElementById('uploadSection').scrollIntoView({ behavior: 'smooth' });
+    setTimeout(() => {
+        showNotification(translations[lang].payment_success, 'success');
+        
+        userCredits++;
+        updateCreditsDisplay();
+        
+        // Hide payment section and show upload section
+        document.getElementById('paymentSection').style.display = 'none';
+        document.getElementById('uploadSection').style.display = 'block';
+        document.getElementById('uploadSection').scrollIntoView({ behavior: 'smooth' });
+    }, 2000);
 }
 
 function checkUserCredits() {
     // In a real implementation, this would check the user's credits from the server
-    // For demo purposes, we'll start with 0 credits
-    userCredits = parseInt(localStorage.getItem('userCredits') || '0');
+    // For demo purposes, we'll start with 1 free credit
+    userCredits = parseInt(localStorage.getItem('userCredits') || '1');
     updateCreditsDisplay();
 }
 
 function updateCreditsDisplay() {
     localStorage.setItem('userCredits', userCredits.toString());
     
-    // Update credits display in UI if you have one
+    // Update credits display in UI
     const creditsDisplay = document.getElementById('creditsDisplay');
     if (creditsDisplay) {
         creditsDisplay.textContent = userCredits;
@@ -284,18 +298,22 @@ function showNotification(message, type = 'info') {
         z-index: 1000;
         max-width: 300px;
         animation: slideIn 0.3s ease-out;
+        font-weight: 500;
     `;
     notification.textContent = message;
     
-    // Add animation styles
-    const style = document.createElement('style');
-    style.textContent = `
-        @keyframes slideIn {
-            from { transform: translateX(100%); opacity: 0; }
-            to { transform: translateX(0); opacity: 1; }
-        }
-    `;
-    document.head.appendChild(style);
+    // Add animation styles if not already added
+    if (!document.getElementById('notification-styles')) {
+        const style = document.createElement('style');
+        style.id = 'notification-styles';
+        style.textContent = `
+            @keyframes slideIn {
+                from { transform: translateX(100%); opacity: 0; }
+                to { transform: translateX(0); opacity: 1; }
+            }
+        `;
+        document.head.appendChild(style);
+    }
     
     document.body.appendChild(notification);
     
@@ -315,8 +333,9 @@ document.addEventListener('DOMContentLoaded', function() {
     const header = document.querySelector('header');
     const creditsDiv = document.createElement('div');
     creditsDiv.innerHTML = `
-        <div style="color: white; font-weight: 600;">
-            Credits: <span id="creditsDisplay">${userCredits}</span>
+        <div style="color: white; font-weight: 600; display: flex; align-items: center; gap: 10px;">
+            <span>Credits:</span>
+            <span id="creditsDisplay" style="background: rgba(255,255,255,0.2); padding: 5px 10px; border-radius: 15px;">${userCredits}</span>
         </div>
     `;
     header.appendChild(creditsDiv);

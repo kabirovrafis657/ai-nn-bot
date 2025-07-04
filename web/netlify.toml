@@ -2,15 +2,18 @@
   publish = "."
   command = "echo 'Static site - no build required'"
 
+# PHP function for API endpoints
+[functions]
+  directory = "api"
+
+# Redirect API calls to PHP functions
 [[redirects]]
-  from = "/api/*"
-  to = "/api.php"
+  from = "/api/process"
+  to = "/api/process.php"
   status = 200
+  force = true
 
-[build.environment]
-  NODE_VERSION = "18"
-
-# Handle SPA routing
+# Handle SPA routing - this should be last
 [[redirects]]
   from = "/*"
   to = "/index.html"
